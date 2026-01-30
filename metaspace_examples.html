@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Metaspace Components - Detailed Examples</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        
+        .example-section {
+            margin-bottom: 40px;
+            border: 3px solid #3498db;
+            border-radius: 10px;
+            padding: 25px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+        
+        .section-title {
+            font-size: 1.8em;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-family: 'Segoe UI', sans-serif;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        
+        .code-block {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 15px 0;
+            border-left: 5px solid #3498db;
+        }
+        
+        .code-block pre {
+            margin: 0;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+        
+        .keyword {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        
+        .string {
+            color: #2ecc71;
+        }
+        
+        .comment {
+            color: #95a5a6;
+            font-style: italic;
+        }
+        
+        .number {
+            color: #f39c12;
+        }
+        
+        .type {
+            color: #9b59b6;
+        }
+        
+        .explanation {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 5px solid #e74c3c;
+        }
+        
+        .explanation-title {
+            font-size: 1.2em;
+            color: #e74c3c;
+            margin-bottom: 10px;
+            font-family: 'Segoe UI', sans-serif;
+            font-weight: bold;
+        }
+        
+        .stored-data {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            border: 2px solid #ffc107;
+        }
+        
+        .stored-data-title {
+            font-weight: bold;
+            color: #856404;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+        
+        .data-item {
+            padding: 8px;
+            margin: 5px 0;
+            background: white;
+            border-radius: 5px;
+            border-left: 3px solid #ffc107;
+            font-size: 0.9em;
+        }
+        
+        .memory-location {
+            background: #d1ecf1;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            border-left: 3px solid #17a2b8;
+            font-weight: bold;
+            color: #0c5460;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background: #3498db;
+            color: white;
+            font-weight: bold;
+        }
+        
+        tr:hover {
+            background: #f5f5f5;
+        }
+        
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .visual-box {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #9b59b6;
+        }
+        
+        .visual-box-title {
+            font-weight: bold;
+            color: #8e44ad;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+            border-bottom: 2px solid #9b59b6;
+            padding-bottom: 5px;
+        }
+        
+        ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        
+        li {
+            margin: 5px 0;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📚 Metaspace Components - Detailed Examples</h1>
+        <p class="subtitle">Understanding What Gets Stored in Each Metaspace Component</p>
+        
+        <!-- CLASS METADATA EXAMPLE -->
+        <div class="example-section">
+            <div class="section-title">1️⃣ Class Metadata</div>
+            
+            <div class="code-block">
+                <pre><span class="keyword">public class</span> <span class="type">Employee</span> {
+    <span class="comment">// Fields</span>
+    <span class="keyword">private</span> <span class="type">String</span> name;
+    <span class="keyword">private</span> <span class="keyword">int</span> id;
+    <span class="keyword">private static</span> <span class="type">String</span> companyName = <span class="string">"TechCorp"</span>;
+    
+    <span class="comment">// Constructor</span>
+    <span class="keyword">public</span> Employee(<span class="type">String</span> name, <span class="keyword">int</span> id) {
+        <span class="keyword">this</span>.name = name;
+        <span class="keyword">this</span>.id = id;
+    }
+    
+    <span class="comment">// Methods</span>
+    <span class="keyword">public</span> <span class="type">String</span> getName() {
+        <span class="keyword">return</span> name;
+    }
+    
+    <span class="keyword">public static</span> <span class="keyword">void</span> printCompany() {
+        System.out.println(companyName);
+    }
+}</pre>
+            </div>
+            
+            <div class="explanation">
+                <div class="explanation-title">📦 What Gets Stored in Metaspace as Class Metadata:</div>
+                
+                <div class="stored-data">
+                    <div class="stored-data-title">Class Structure Information:</div>
+                    <div class="data-item">✓ Class name: "Employee"</div>
+                    <div class="data-item">✓ Superclass: java.lang.Object</div>
+                    <div class="data-item">✓ Interfaces: none</div>
+                    <div class="data-item">✓ Access modifiers: public</div>
+                    <div class="data-item">✓ Class type: regular class (not interface, enum, or annotation)</div>
+                    <div class="data-item">✓ Package: (default package or specified package)</div>
+                </div>
+                
+                <div class="stored-data">
+                    <div class="stored-data-title">Class Hierarchy:</div>
+                    <div class="data-item">✓ Pointer to superclass (Object)</div>
+                    <div class="data-item">✓ Pointer to classloader that loaded this class</div>
+                    <div class="data-item">✓ Array of interfaces implemented (empty in this case)</div>
+                </div>
+                
+                <div class="memory-location">
+                    📍 Location: Metaspace (Native Memory) - NOT in Java Heap
+                </div>
+            </div>
+        </div>
+        
+        <!-- FIELD & METHOD DATA EXAMPLE -->
+        <div class="example-section">
+            <div class="section-title">2️⃣ Field & Method Data</div>
+            
+            <div class="code-block">
+                <pre><span class="keyword">public class</span> <span class="type">Product</span> {
+    <span class="keyword">private</span> <span class="keyword">int</span> productId;           <span class="comment">// Instance field</span>
+    <span class="keyword">private</span> <span class="type">String</span> productName;     <span class="comment">// Instance field</span>
+    <span class="keyword">private</span> <span class="keyword">double</span> price;            <span class="comment">// Instance field</span>
+    <span class="keyword">private static</span> <span class="keyword">int</span> totalProducts;  <span class="comment">// Static field</span>
+    
+    <span class="keyword">public</span> <span class="keyword">void</span> updatePrice(<span class="keyword">double</span> newPrice) {
+        <span class="keyword">this</span>.price = newPrice;
+    }
+    
+    <span class="keyword">public</span> <span class="keyword">double</span> calculateDiscount(<span class="keyword">double</span> percentage) {
+        <span class="keyword">return</span> price * (percentage / <span class="number">100</span>);
+    }
+}</pre>
+            </div>
+            
+            <div class="explanation">
+                <div class="explanation-title">📋 Field Data Stored in Metaspace:</div>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Field Name</th>
+                            <th>Type</th>
+                            <th>Modifiers</th>
+                            <th>Offset</th>
+                            <th>Storage Location</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>productId</td>
+                            <td>int</td>
+                            <td>private</td>
+                            <td>0</td>
+                            <td>Instance fields → Heap (per object)</td>
+                        </tr>
+                        <tr>
+                            <td>productName</td>
+                            <td>String</td>
+                            <td>private</td>
+                            <td>4</td>
+                            <td>Instance fields → Heap (per object)</td>
+                        </tr>
+                        <tr>
+                            <td>price</td>
+                            <td>double</td>
+                            <td>private</td>
+                            <td>8</td>
+                            <td>Instance fields → Heap (per object)</td>
+                        </tr>
+                        <tr>
+                            <td>totalProducts</td>
+                            <td>int</td>
+                            <td>private static</td>
+                            <td>-</td>
+                            <td>Static fields → Class object in Heap</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="stored-data">
+                    <div class="stored-data-title">Field Metadata in Metaspace:</div>
+                    <div class="data-item">✓ Field name (string reference)</div>
+                    <div class="data-item">✓ Field type (class reference)</div>
+                    <div class="data-item">✓ Field modifiers (private, static, final, etc.)</div>
+                    <div class="data-item">✓ Field offset (position in object layout)</div>
+                    <div class="data-item">✓ Field descriptor (type signature)</div>
+                </div>
+                
+                <div class="explanation-title" style="margin-top: 20px;">🔧 Method Data Stored in Metaspace:</div>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Method Name</th>
+                            <th>Return Type</th>
+                            <th>Parameters</th>
+                            <th>Bytecode</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>updatePrice</td>
+                            <td>void</td>
+                            <td>double newPrice</td>
+                            <td>Bytecode instructions stored</td>
+                        </tr>
+                        <tr>
+                            <td>calculateDiscount</td>
+                            <td>double</td>
+                            <td>double percentage</td>
+                            <td>Bytecode instructions stored</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="stored-data">
+                    <div class="stored-data-title">Method Metadata in Metaspace:</div>
+                    <div class="data-item">✓ Method name (string reference)</div>
+                    <div class="data-item">✓ Method signature (parameter types + return type)</div>
+                    <div class="data-item">✓ Method modifiers (public, private, static, etc.)</div>
+                    <div class="data-item">✓ Method bytecode (compiled .class instructions)</div>
+                    <div class="data-item">✓ Exception table (try-catch information)</div>
+                    <div class="data-item">✓ Line number table (for debugging)</div>
+                    <div class="data-item">✓ Local variable table</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- METHOD INFORMATION EXAMPLE -->
+        <div class="example-section">
+            <div class="section-title">3️⃣ Method Information (Detailed)</div>
+            
+            <div class="code-block">
+                <pre><span class="keyword">public class</span> <span class="type">Calculator</span> {
+    <span class="keyword">public</span> <span class="keyword">int</span> add(<span class="keyword">int</span> a, <span class="keyword">int</span> b) {
+        <span class="keyword">try</span> {
+            <span class="keyword">return</span> a + b;
+        } <span class="keyword">catch</span> (<span class="type">Exception</span> e) {
+            <span class="keyword">return</span> <span class="number">0</span>;
+        }
+    }
+    
+    <span class="keyword">public static</span> <span class="keyword">double</span> divide(<span class="keyword">double</span> numerator, <span class="keyword">double</span> denominator) 
+            <span class="keyword">throws</span> <span class="type">ArithmeticException</span> {
+        <span class="keyword">if</span> (denominator == <span class="number">0</span>) {
+            <span class="keyword">throw new</span> ArithmeticException(<span class="string">"Division by zero"</span>);
+        }
+        <span class="keyword">return</span> numerator / denominator;
+    }
+}</pre>
+            </div>
+            
+            <div class="explanation">
+                <div class="explanation-title">🔍 Method Information Stored for add() method:</div>
+                
+                <div class="grid-container">
+                    <div class="visual-box">
+                        <div class="visual-box-title">Basic Method Info</div>
+                        <ul>
+                            <li><strong>Name:</strong> "add"</li>
+                            <li><strong>Descriptor:</strong> (II)I</li>
+                            <li><strong>Flags:</strong> ACC_PUBLIC</li>
+                            <li><strong>Max Stack:</strong> 2</li>
+                            <li><strong>Max Locals:</strong> 3</li>
+                            <li><strong>Code Length:</strong> ~15 bytes</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="visual-box">
+                        <div class="visual-box-title">Bytecode Instructions</div>
+                        <ul>
+                            <li>0: iload_1 (load a)</li>
+                            <li>1: iload_2 (load b)</li>
+                            <li>2: iadd (add)</li>
+                            <li>3: ireturn (return result)</li>
+                            <li>4: astore_3 (catch block)</li>
+                            <li>5: iconst_0 (return 0)</li>
+                            <li>6: ireturn</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="visual-box">
+                        <div class="visual-box-title">Exception Table</div>
+                        <ul>
+                            <li><strong>Start PC:</strong> 0</li>
+                            <li><strong>End PC:</strong> 3</li>
+                            <li><strong>Handler PC:</strong> 4</li>
+                            <li><strong>Catch Type:</strong> Exception</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="visual-box">
+                        <div class="visual-box-title">Line Number Table</div>
+                        <ul>
+                            <li>Line 2 → PC 0</li>
+                            <li>Line 3 → PC 3</li>
+                            <li>Line 4 → PC 4</li>
+                            <li>Line 5 → PC 5</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="memory-location">
+                    📍 All this method information is stored in Metaspace (NOT in Heap)
+                </div>
+            </div>
+        </div>
+        
+        <!-- RUNTIME CONSTANT POOL EXAMPLE -->
+        <div class="example-section">
+            <div class="section-title">4️⃣ Runtime Constant Pool</div>
+            
+            <div class="code-block">
+                <pre><span class="keyword">public class</span> <span class="type">Constants</span> {
+    <span class="keyword">private static final</span> <span class="keyword">int</span> MAX_SIZE = <span class="number">100</span>;
+    <span class="keyword">private static final</span> <span class="type">String</span> APP_NAME = <span class="string">"MyApp"</span>;
+    <span class="keyword">private static final</span> <span class="keyword">double</span> PI = <span class="number">3.14159</span>;
+    
+    <span class="keyword">public</span> <span class="keyword">void</span> process() {
+        <span class="type">String</span> message = <span class="string">"Processing..."</span>;
+        <span class="keyword">int</span> count = <span class="number">42</span>;
+        <span class="keyword">double</span> rate = <span class="number">2.5</span>;
+        
+        System.out.println(<span class="string">"Status: "</span> + message);
+    }
+}</pre>
+            </div>
+            
+            <div class="explanation">
+                <div class="explanation-title">💎 Runtime Constant Pool Contents (Per Class):</div>
+                
+                <div class="stored-data">
+                    <div class="stored-data-title">1. Literal Constants:</div>
+                    <div class="data-item">✓ Integer literals: 100, 42</div>
+                    <div class="data-item">✓ Double literals: 3.14159, 2.5</div>
+                    <div class="data-item">✓ String literals: "MyApp", "Processing...", "Status: "</div>
+                    <div class="data-item">✓ Note: String literals themselves are in String Pool (Heap), but REFERENCES are here</div>
+                </div>
+                
+                <div class="stored-data">
+                    <div class="stored-data-title">2. Symbolic References:</div>
+                    <div class="data-item">✓ Class references: Constants, String, System</div>
+                    <div class="data-item">✓ Field references: MAX_SIZE, APP_NAME, PI, out</div>
+                    <div class="data-item">✓ Method references: process(), println()</div>
+                    <div class="data-item">✓ Interface method references (if any)</div>
+                </div>
+                
+                <div class="stored-data">
+                    <div class="stored-data-title">3. Type Descriptors:</div>
+                    <div class="data-item">✓ Field descriptors: I (int), D (double), Ljava/lang/String;</div>
+                    <div class="data-item">✓ Method descriptors: ()V (void method, no params)</div>
+                    <div class="data-item">✓ (Ljava/lang/String;)V (method taking String, returning void)</div>
+                </div>
+                
+                <div class="stored-data">
+                    <div class="stored-data-title">4. Name and Type Information:</div>
+                    <div class="data-item">✓ Field names: "MAX_SIZE", "APP_NAME", "PI"</div>
+                    <div class="data-item">✓ Method names: "process", "println"</div>
+                    <div class="data-item">✓ UTF-8 strings for names and descriptors</div>
+                </div>
+                
+                <table style="margin-top: 20px;">
+                    <thead>
+                        <tr>
+                            <th>Index</th>
+                            <th>Type</th>
+                            <th>Value/Reference</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>#1</td>
+                            <td>CONSTANT_Methodref</td>
+                            <td>java/lang/Object."&lt;init&gt;"</td>
+                            <td>Object constructor</td>
+                        </tr>
+                        <tr>
+                            <td>#2</td>
+                            <td>CONSTANT_Fieldref</td>
+                            <td>java/lang/System.out</td>
+                            <td>System.out field</td>
+                        </tr>
+                        <tr>
+                            <td>#3</td>
+                            <td>CONSTANT_String</td>
+                            <td>"Processing..."</td>
+                            <td>String literal reference</td>
+                        </tr>
+                        <tr>
+                            <td>#4</td>
+                            <td>CONSTANT_Integer</td>
+                            <td>100</td>
+                            <td>MAX_SIZE constant</td>
+                        </tr>
+                        <tr>
+                            <td>#5</td>
+                            <td>CONSTANT_Double</td>
+                            <td>3.14159</td>
+                            <td>PI constant</td>
+                        </tr>
+                        <tr>
+                            <td>#6</td>
+                            <td>CONSTANT_Class</td>
+                            <td>Constants</td>
+                            <td>This class reference</td>
+                        </tr>
+                        <tr>
+                            <td>#7</td>
+                            <td>CONSTANT_Utf8</td>
+                            <td>"process"</td>
+                            <td>Method name</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="memory-location">
+                    📍 Runtime Constant Pool is stored INSIDE Metaspace (part of class metadata)
+                </div>
+            </div>
+        </div>
+        
+        <!-- COMPLETE EXAMPLE -->
+        <div class="example-section">
+            <div class="section-title">5️⃣ Complete Example: What Goes Where</div>
+            
+            <div class="code-block">
+                <pre><span class="keyword">public class</span> <span class="type">BankAccount</span> {
+    <span class="comment">// Static field - value stored in Heap (Class object)</span>
+    <span class="keyword">private static</span> <span class="keyword">int</span> totalAccounts = <span class="number">0</span>;
+    
+    <span class="comment">// Instance fields - metadata in Metaspace, values in Heap (per object)</span>
+    <span class="keyword">private</span> <span class="type">String</span> accountNumber;
+    <span class="keyword">private</span> <span class="keyword">double</span> balance;
+    
+    <span class="comment">// Constructor - bytecode in Metaspace</span>
+    <span class="keyword">public</span> BankAccount(<span class="type">String</span> accountNumber) {
+        <span class="keyword">this</span>.accountNumber = accountNumber;
+        <span class="keyword">this</span>.balance = <span class="number">0.0</span>;
+        totalAccounts++;
+    }
+    
+    <span class="comment">// Method - bytecode in Metaspace</span>
+    <span class="keyword">public</span> <span class="keyword">void</span> deposit(<span class="keyword">double</span> amount) {
+        <span class="keyword">if</span> (amount > <span class="number">0</span>) {
+            balance += amount;
+            System.out.println(<span class="string">"Deposited: $"</span> + amount);
+        }
+    }
+}</pre>
+            </div>
+            
+            <div class="explanation">
+                <div class="explanation-title">🗺️ Memory Layout Breakdown:</div>
+                
+                <div class="grid-container">
+                    <div class="visual-box" style="border-color: #e74c3c;">
+                        <div class="visual-box-title" style="color: #c0392b; border-color: #e74c3c;">
+                            🗂️ HEAP MEMORY
+                        </div>
+                        <ul>
+                            <li><strong>String Pool:</strong></li>
+                            <li style="padding-left: 20px;">→ "Deposited: $"</li>
+                            <li><strong>Object Instances:</strong></li>
+                            <li style="padding-left: 20px;">→ BankAccount object #1</li>
+                            <li style="padding-left: 35px;">• accountNumber = "ACC001"</li>
+                            <li style="padding-left: 35px;">• balance = 1000.0</li>
+                            <li style="padding-left: 20px;">→ BankAccount object #2</li>
+                            <li style="padding-left: 35px;">• accountNumber = "ACC002"</li>
+                            <li style="padding-left: 35px;">• balance = 500.0</li>
+                            <li><strong>Class Object (java.lang.Class):</strong></li>
+                            <li style="padding-left: 20px;">→ totalAccounts = 2</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="visual-box" style="border-color: #3498db;">
+                        <div class="visual-box-title" style="color: #2980b9; border-color: #3498db;">
+                            💾 METASPACE
+                        </div>
+                        <ul>
+                            <li><strong>Class Metadata:</strong></li>
+                            <li style="padding-left: 20px;">→ Class name: "BankAccount"</li>
+                            <li style="padding-left: 20px;">→ Superclass: Object</li>
+                            <li style="padding-left: 20px;">→ Modifiers: public</li>
+                            <li><strong>Field Metadata:</strong></li>
+                            <li style="padding-left: 20px;">→ totalAccounts (int, static)</li>
+                            <li style="padding-left: 20px;">→ accountNumber (String, private)</li>
+                            <li style="padding-left: 20px;">→ balance (double, private)</li>
+                            <li><strong>Method Metadata + Bytecode:</strong></li>
+                            <li style="padding-left: 20px;">→ BankAccount(String) constructor</li>
+                            <li style="padding-left: 20px;">→ deposit(double) method</li>
+                            <li><strong>Runtime Constant Pool:</strong></li>
+                            <li style="padding-left: 20px;">→ Literal: 0.0, 0</li>
+                            <li style="padding-left: 20px;">→ String ref: "Deposited: $"</li>
+                            <li style="padding-left: 20px;">→ Class refs: System, String</li>
+                            <li style="padding-left: 20px;">→ Method refs: println()</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="stored-data" style="margin-top: 20px;">
+                    <div class="stored-data-title">📊 Size Comparison:</div>
+                    <div class="data-item"><strong>Per BankAccount object in Heap:</strong> ~32 bytes (12 header + 8 ref + 8 double + 4 padding)</div>
+                    <div class="data-item"><strong>Class metadata in Metaspace:</strong> ~2-5 KB (shared by all instances)</div>
+                    <div class="data-item"><strong>Conclusion:</strong> Metadata stored once, object data stored per instance</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- COMPARISON TABLE -->
+        <div class="example-section">
+            <div class="section-title">📊 Summary: Metaspace vs Heap</div>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Component</th>
+                        <th>Stored In</th>
+                        <th>Example</th>
+                        <th>Shared/Per-Instance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Class name, modifiers</strong></td>
+                        <td>Metaspace</td>
+                        <td>"BankAccount", public</td>
+                        <td>Shared (one copy)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Field metadata</strong></td>
+                        <td>Metaspace</td>
+                        <td>Field: "balance", type: double</td>
+                        <td>Shared (one copy)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Field values (instance)</strong></td>
+                        <td>Heap</td>
+                        <td>balance = 1000.0</td>
+                        <td>Per-instance</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Field values (static)</strong></td>
+                        <td>Heap (Class object)</td>
+                        <td>totalAccounts = 2</td>
+                        <td>Shared (one copy)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Method bytecode</strong></td>
+                        <td>Metaspace</td>
+                        <td>deposit() bytecode instructions</td>
+                        <td>Shared (one copy)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Method local variables</strong></td>
+                        <td>Stack</td>
+                        <td>amount = 100.0</td>
+                        <td>Per-invocation</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Runtime Constant Pool</strong></td>
+                        <td>Metaspace</td>
+                        <td>String refs, numeric literals</td>
+                        <td>Shared (per class)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>String literals</strong></td>
+                        <td>Heap (String Pool)</td>
+                        <td>"Deposited: $"</td>
+                        <td>Shared (interned)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Object instances</strong></td>
+                        <td>Heap</td>
+                        <td>new BankAccount("ACC001")</td>
+                        <td>Per-instance</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- KEY TAKEAWAYS -->
+        <div style="background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%); padding: 25px; border-radius: 10px; border: 3px solid #2c3e50; margin-top: 30px;">
+            <h2 style="text-align: center; color: #2c3e50; margin-bottom: 15px; font-family: 'Segoe UI', sans-serif;">
+                🎯 Key Takeaways
+            </h2>
+            <div class="grid-container">
+                <div style="background: white; padding: 15px; border-radius: 8px; border-left: 5px solid #e74c3c;">
+                    <strong style="color: #e74c3c; font-size: 1.1em;">Metaspace Contains:</strong>
+                    <ul style="margin-top: 10px;">
+                        <li>Class structure and metadata</li>
+                        <li>Method bytecode and information</li>
+                        <li>Field metadata (NOT values)</li>
+                        <li>Runtime Constant Pool (per class)</li>
+                        <li>Everything loaded ONCE per class</li>
+                    </ul>
+                </div>
+                
+                <div style="background: white; padding: 15px; border-radius: 8px; border-left: 5px solid #3498db;">
+                    <strong style="color: #3498db; font-size: 1.1em;">Heap Contains:</strong>
+                    <ul style="margin-top: 10px;">
+                        <li>Object instances (per object)</li>
+                        <li>Instance field VALUES</li>
+                        <li>Static field VALUES (in Class object)</li>
+                        <li>String Pool (string literals)</li>
+                        <li>Arrays</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div style="background: white; padding: 15px; border-radius: 8px; margin-top: 15px; border-left: 5px solid #27ae60;">
+                <strong style="color: #27ae60; font-size: 1.1em;">💡 Remember:</strong>
+                <ul style="margin-top: 10px;">
+                    <li><strong>Metaspace = Class-level</strong> (structure, definitions, code) - stored ONCE</li>
+                    <li><strong>Heap = Object-level</strong> (instance data, values) - stored PER OBJECT</li>
+                    <li><strong>Runtime Constant Pool</strong> is INSIDE Metaspace (part of class metadata)</li>
+                    <li><strong>String Pool</strong> is INSIDE Heap (Java 7+)</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
