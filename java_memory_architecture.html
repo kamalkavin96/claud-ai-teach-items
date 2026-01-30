@@ -162,7 +162,7 @@
         
         .non-heap-content {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(2, 1fr);
             gap: 10px;
             margin-top: 30px;
         }
@@ -343,21 +343,27 @@
                 <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; border: 2px solid white;">
                     <strong style="font-size: 1.2em; display: block; margin-bottom: 10px;">🌐 SHARED MEMORY (All Threads)</strong>
                     <ul style="list-style: none; padding-left: 0;">
-                        <li>✓ Heap Memory (Objects & Arrays)</li>
-                        <li>✓ String Constant Pool</li>
-                        <li>✓ Metaspace (Class Metadata)</li>
-                        <li>✓ Code Cache</li>
-                        <li>✓ Runtime Constant Pool</li>
+                        <li>✓ Heap Memory</li>
+                        <li style="padding-left: 20px;">↳ Young Generation (Eden, S0, S1)</li>
+                        <li style="padding-left: 20px;">↳ Old Generation (Tenured)</li>
+                        <li style="padding-left: 20px;">↳ String Constant Pool (Java 7+)</li>
+                        <li>✓ Non-Heap Memory (Native Memory)</li>
+                        <li style="padding-left: 20px;">↳ Metaspace</li>
+                        <li style="padding-left: 35px;">• Runtime Constant Pool (per-class)</li>
+                        <li style="padding-left: 35px;">• Class metadata & methods</li>
+                        <li style="padding-left: 20px;">↳ Code Cache (JIT compiled code)</li>
+                        <li style="padding-left: 20px;">↳ Direct Memory (Off-heap NIO)</li>
                     </ul>
                 </div>
                 <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; border: 2px solid white;">
                     <strong style="font-size: 1.2em; display: block; margin-bottom: 10px;">👤 PER-THREAD MEMORY</strong>
                     <ul style="list-style: none; padding-left: 0;">
-                        <li>✓ JVM Stack (Method Frames)</li>
+                        <li>✓ JVM Stack</li>
+                        <li style="padding-left: 20px;">↳ Stack Frames</li>
+                        <li style="padding-left: 20px;">↳ Local Variables</li>
+                        <li style="padding-left: 20px;">↳ Operand Stack</li>
                         <li>✓ Native Method Stack (JNI)</li>
                         <li>✓ PC Register (Program Counter)</li>
-                        <li>✓ Local Variables</li>
-                        <li>✓ Operand Stack</li>
                     </ul>
                 </div>
             </div>
@@ -442,6 +448,18 @@
                             </div>
                         </div>
                     </div>
+                    
+                    <!-- String Constant Pool in Heap -->
+                    <div style="margin-top: 15px; background: rgba(255, 255, 255, 0.95); padding: 15px; border-radius: 8px; border: 3px solid #e74c3c;">
+                        <div class="generation-title" style="color: #c0392b;">🔤 String Constant Pool (Java 7+)</div>
+                        <div style="font-size: 0.9em; color: #2c3e50; margin-top: 8px;">
+                            <strong>Location:</strong> Inside Heap Memory<br>
+                            • Stores unique string literals<br>
+                            • String.intern() adds strings here<br>
+                            • Prevents duplicate string objects<br>
+                            • <strong>Note:</strong> In Java 6 and earlier, it was in PermGen
+                        </div>
+                    </div>
                     <div style="margin-top: 15px; text-align: center; color: white; font-weight: bold;">
                         📊 Heap Size: -Xms (initial) -Xmx (maximum)
                     </div>
@@ -451,24 +469,13 @@
                 <div class="memory-section non-heap">
                     <div class="section-title">💾 NON-HEAP MEMORY (Shared)</div>
                     <div class="non-heap-content">
-                        <div class="metaspace-block" style="border-color: #e74c3c; background: linear-gradient(135deg, #fff5f5 0%, #ffe5e5 100%);">
-                            <div class="generation-title" style="color: #c0392b;">🔤 String Constant Pool</div>
-                            <ul class="info-list">
-                                <li><strong>Location:</strong> Heap (Java 7+)</li>
-                                <li>String literals storage</li>
-                                <li>Interned strings (String.intern())</li>
-                                <li>Prevents duplicate strings</li>
-                                <li>Memory optimization</li>
-                                <li><strong>Example:</strong> "Hello" stored once</li>
-                            </ul>
-                        </div>
-                        
                         <div class="metaspace-block">
                             <div class="generation-title">📚 Metaspace (Java 8+)</div>
                             <ul class="info-list">
                                 <li>Class metadata storage</li>
                                 <li>Method information</li>
-                                <li>Runtime constant pool</li>
+                                <li><strong>Runtime Constant Pool</strong> (per-class)</li>
+                                <li>Field & method data</li>
                                 <li>Native memory (not in JVM heap)</li>
                                 <li>Replaces PermGen (Java 7)</li>
                                 <li>Auto-grows, no fixed size</li>
@@ -490,28 +497,20 @@
                             <div class="generation-title">🔐 Compressed Class Space</div>
                             <ul class="info-list">
                                 <li>Class pointers (64-bit JVM)</li>
-                                <li>Enabled with -XX:+UseCompressedClassPointers</li>
-                                <li>Part of Metaspace</li>
+                                <li>Part of Metaspace region</li>
+                                <li>-XX:+UseCompressedClassPointers</li>
+                                <li>Stores klass metadata</li>
                             </ul>
                         </div>
                         
                         <div class="metaspace-block">
-                            <div class="generation-title">⚙️ Direct Memory</div>
+                            <div class="generation-title">⚙️ Direct Memory (Off-Heap)</div>
                             <ul class="info-list">
-                                <li>NIO buffers</li>
+                                <li>NIO buffers (ByteBuffer.allocateDirect)</li>
                                 <li>Off-heap memory</li>
                                 <li>Native allocations</li>
+                                <li>Not managed by GC</li>
                                 <li>-XX:MaxDirectMemorySize</li>
-                            </ul>
-                        </div>
-                        
-                        <div class="metaspace-block">
-                            <div class="generation-title">📋 Runtime Constant Pool</div>
-                            <ul class="info-list">
-                                <li>Per-class constant pool</li>
-                                <li>Numeric literals</li>
-                                <li>String references</li>
-                                <li>Stored in Metaspace</li>
                             </ul>
                         </div>
                     </div>
@@ -664,14 +663,14 @@
         <!-- ADDITIONAL INFORMATION -->
         <div class="additional-info">
             <div class="info-card" style="border-left-color: #e74c3c;">
-                <div class="info-title">🔤 String Constant Pool Details</div>
+                <div class="info-title">🔤 String Constant Pool Location</div>
                 <ul class="info-list">
-                    <li><strong>Location:</strong> Heap Memory (Java 7+), PermGen (Java 6)</li>
+                    <li><strong>Java 7+:</strong> Inside Heap Memory ✓</li>
+                    <li><strong>Java 6 and earlier:</strong> PermGen Space</li>
                     <li>Stores unique string literals</li>
                     <li>String.intern() adds to pool</li>
-                    <li>String s = "Hello" → pool</li>
-                    <li>String s = new String("Hello") → heap</li>
-                    <li>Garbage collected like other objects</li>
+                    <li>String s = "Hello" → pool (Heap)</li>
+                    <li>Garbage collected with heap objects</li>
                 </ul>
             </div>
             
@@ -771,6 +770,69 @@
             </div>
         </div>
         
+        <!-- MEMORY HIERARCHY CLARIFICATION -->
+        <div style="margin-top: 30px; padding: 20px; background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%); border-radius: 10px; border: 3px solid #2c3e50;">
+            <h3 style="text-align: center; color: #2c3e50; margin-bottom: 15px;">📊 Complete JVM Memory Hierarchy</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div style="background: white; padding: 15px; border-radius: 8px; border: 2px solid #e74c3c;">
+                    <strong style="color: #c0392b; font-size: 1.1em; display: block; margin-bottom: 10px;">🗂️ HEAP MEMORY (Shared)</strong>
+                    <ul style="list-style: none; padding-left: 10px; font-size: 0.9em; color: #2c3e50;">
+                        <li>├── Young Generation</li>
+                        <li style="padding-left: 20px;">│   ├── Eden Space</li>
+                        <li style="padding-left: 20px;">│   ├── Survivor 0 (S0)</li>
+                        <li style="padding-left: 20px;">│   └── Survivor 1 (S1)</li>
+                        <li>├── Old Generation (Tenured)</li>
+                        <li>└── String Constant Pool <span style="color: #e74c3c;">(Java 7+)</span></li>
+                    </ul>
+                </div>
+                
+                <div style="background: white; padding: 15px; border-radius: 8px; border: 2px solid #3498db;">
+                    <strong style="color: #2980b9; font-size: 1.1em; display: block; margin-bottom: 10px;">💾 NON-HEAP MEMORY (Shared)</strong>
+                    <ul style="list-style: none; padding-left: 10px; font-size: 0.9em; color: #2c3e50;">
+                        <li>├── Metaspace (Native Memory)</li>
+                        <li style="padding-left: 20px;">│   ├── Class Metadata</li>
+                        <li style="padding-left: 20px;">│   ├── Method Information</li>
+                        <li style="padding-left: 20px;">│   ├── <strong>Runtime Constant Pool</strong></li>
+                        <li style="padding-left: 20px;">│   └── Compressed Class Space</li>
+                        <li>├── Code Cache (JIT compiled code)</li>
+                        <li>└── Direct Memory (Off-heap, NIO)</li>
+                    </ul>
+                </div>
+                
+                <div style="background: white; padding: 15px; border-radius: 8px; border: 2px solid #e67e22;">
+                    <strong style="color: #d35400; font-size: 1.1em; display: block; margin-bottom: 10px;">📚 JVM STACK (Per Thread)</strong>
+                    <ul style="list-style: none; padding-left: 10px; font-size: 0.9em; color: #2c3e50;">
+                        <li>├── Stack Frame (per method)</li>
+                        <li style="padding-left: 20px;">│   ├── Local Variables</li>
+                        <li style="padding-left: 20px;">│   ├── Operand Stack</li>
+                        <li style="padding-left: 20px;">│   ├── Frame Data</li>
+                        <li style="padding-left: 20px;">│   └── Return Address</li>
+                        <li>└── TLAB (Thread Local Allocation Buffer)</li>
+                    </ul>
+                </div>
+                
+                <div style="background: white; padding: 15px; border-radius: 8px; border: 2px solid #27ae60;">
+                    <strong style="color: #229954; font-size: 1.1em; display: block; margin-bottom: 10px;">👤 OTHER PER-THREAD MEMORY</strong>
+                    <ul style="list-style: none; padding-left: 10px; font-size: 0.9em; color: #2c3e50;">
+                        <li>├── Native Method Stack</li>
+                        <li style="padding-left: 20px;">│   └── JNI (Java Native Interface) calls</li>
+                        <li>└── PC Register (Program Counter)</li>
+                        <li style="padding-left: 20px;">    └── Current instruction address</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div style="margin-top: 15px; padding: 15px; background: rgba(255,255,255,0.9); border-radius: 8px; border-left: 5px solid #e74c3c;">
+                <strong style="color: #2c3e50;">⚠️ Important Notes:</strong>
+                <ul style="margin-top: 8px; font-size: 0.9em; color: #555;">
+                    <li><strong>String Constant Pool:</strong> Was in PermGen (Java 6) → Moved to Heap (Java 7+)</li>
+                    <li><strong>Runtime Constant Pool:</strong> Always part of Metaspace/PermGen (NOT in String Pool)</li>
+                    <li><strong>Metaspace:</strong> Uses native memory, not JVM heap memory (replaces PermGen in Java 8)</li>
+                    <li><strong>Direct Memory:</strong> Off-heap, used by NIO, not managed by GC</li>
+                </ul>
+            </div>
+        </div>
+        
         <!-- LEGEND -->
         <div class="legend">
             <div class="legend-item">
@@ -826,7 +888,7 @@
                     <strong>Full GC:</strong> Cleans entire heap (slowest, stop-the-world)
                 </div>
                 <div>
-                    <strong>Runtime Constant Pool:</strong> Per-class constants in Metaspace
+                    <strong>Runtime Constant Pool:</strong> Per-class constants stored inside Metaspace
                 </div>
                 <div>
                     <strong>Direct Memory:</strong> Off-heap memory for NIO operations
